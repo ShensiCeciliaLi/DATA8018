@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Generative Models for 3D: A Frontier Survey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#7c3aed',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100">
+    <!-- Header Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-primary">3D Generation: A Comprehensive Survey</h1>
+                <div class="flex gap-6">
+                    <a href="#frontier" class="text-gray-600 hover:text-primary transition">Introduction</a>
+                    <a href="#native" class="text-gray-600 hover:text-primary transition">Native 3D</a>
+                    <a href="#latent" class="text-gray-600 hover:text-primary transition">Latent Space</a>
+                    <a href="#convergence" class="text-gray-600 hover:text-primary transition">Convergence</a>
+                    <a href="#future" class="text-gray-600 hover:text-primary transition">Future</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="frontier" class="max-w-6xl mx-auto px-6 py-16">
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-2xl p-12 text-white">
+            <h2 class="text-4xl font-bold mb-4">The 3D Frontier: Moving Beyond Pixels</h2>
+            
+            <div class="flex items-center gap-4 mb-8 p-4 bg-white/10 rounded-lg border border-white/20 w-fit">
+                <div class="h-12 w-12 bg-white/20 rounded-full flex items-center justify-center font-bold text-xl">
+                    SL
+                </div>
+                <div>
+                    <p class="text-lg font-bold leading-none">Shensi Li</p>
+                    <p class="text-sm opacity-80 mt-1">Musketeers Foundation Institute of Data Science    </p>
+                    <p class="text-xs opacity-70">The University of Hong Kong</p>
+                </div>
+                <div>
+                    <p class="text-lg font-bold leading-none">Xuelin Chen</p>
+                    <p class="text-sm opacity-80 mt-1">School of Computing and Data Science </p>
+                    <p class="text-xs opacity-70">The University of Hong Kong</p>
+                </div>
+            </div>
+
+            <p class="text-xl mb-6 leading-relaxed">
+                The quest for generating high-fidelity 3D assets—combining both geometry and texture—represents one of the most exciting frontiers in computer vision and graphics. This survey explores the evolution from 2D prior-based generation to native 3D generative models, showcasing breakthrough approaches that enable unprecedented quality and scalability.
+            </p>
+            
+            <div class="grid grid-cols-3 gap-4 mt-8">
+                <div class="bg-white/10 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">🎮 Gaming</h3>
+                    <p class="text-sm">Real-time asset generation</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">🏢 Digital Twins</h3>
+                    <p class="text-sm">Virtual environment creation</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">🛠️ Design</h3>
+                    <p class="text-sm">Industrial and creative workflows</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: The Shift to Native 3D -->
+    <section id="native" class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-primary pb-4">Part 1: The Shift to "Native" 3D</h2>
+        
+        <div class="grid grid-cols-2 gap-8 mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-xl font-bold text-primary mb-4">🖼️ 2D Prior-Based Methods</h3>
+                <p class="text-gray-700 mb-4">Historical approaches like DreamFusion and Score Distillation:</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li>Leverage pre-trained 2D image models</li>
+                    <li>Use score distillation to guide 3D optimization</li>
+                    <li>Suffer from the "Janus Problem" (multi-faced objects)</li>
+                    <li>Computationally expensive and slow</li>
+                    <li><strong>Key limitation:</strong> Indirect 3D representation</li>
+                </ul>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-4 border-secondary">
+                <h3 class="text-xl font-bold text-secondary mb-4">🎯 Native 3D Generation</h3>
+                <p class="text-gray-700 mb-4">The modern paradigm—generating 3D directly in 3D space:</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                    <li><strong>Direct Generation:</strong> Predicting points/voxels directly</li>
+                    <li><strong>Latent Generation:</strong> Learning compressed representations</li>
+                    <li>Dramatically faster inference (seconds vs. minutes)</li>
+                    <li>Superior quality and consistency</li>
+                    <li><strong>Key insight:</strong> 3D works best in 3D</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-8 border-l-4 border-blue-400">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">⚡ The Core Challenge</h3>
+            <p class="text-gray-700">
+                3D data is fundamentally different from 2D images: it is sparse (surfaces occupy only a small fraction of space), has varying topology, and requires efficient representations to be tractable for generative models. Native 3D generation tackles this by learning latent spaces tailored specifically for 3D data, enabling both high compression and high-quality reconstruction.
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 2: Deep Dive into Latent 3D Generation -->
+    <section id="latent" class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-secondary pb-4">Part 2: Deep Dive—Latent 3D Generation</h2>
+        
+        <!-- 3DShape2VecSet -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 border-t-4 border-blue-500">
+            <h3 class="text-2xl font-bold text-blue-600 mb-4">📐 3DShape2VecSet: The Foundation—Vectors for Generative Models</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        <strong>3DShape2VecSet</strong> addresses a fundamental question: <em>How should we represent 3D shapes for generative diffusion models?</em> Rather than using voxel grids or directly optimizing point clouds, this work introduces a learned <strong>vector set</strong> representation optimized for transformer architectures.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Core Architecture:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 mb-4">
+                        <li><strong>Cross-Attention Encoder:</strong> Input surface/point cloud → cross-attention with ~1K-4K learnable query vectors</li>
+                        <li><strong>Learnable Queries:</strong> Transformer-based query tokens learn to extract shape information</li>
+                        <li><strong>Neural Field Decoder:</strong> Query vectors → coordinate-based neural field for continuous surface</li>
+                        <li><strong>Diffusion-Ready:</strong> Vector set is compact and transformer-native for diffusion training</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-blue-700 mb-3">Quantitative Results (ShapeNet):</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">IoU</td>
+                            <td class="text-green-600 font-bold">0.965</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Chamfer Distance</td>
+                            <td class="text-green-600 font-bold">0.026</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">F-Score</td>
+                            <td class="text-green-600 font-bold">0.999</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Significance:</strong> Near-perfect reconstruction (F-Score: 0.999) with compact representation</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-blue-100 to-cyan-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-blue-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>First to use vector sets for 3D generation</li>
+                        <li>Cross-attention instead of spatial convolutions</li>
+                        <li>Extremely compact (1K-4K vectors vs millions of voxels)</li>
+                        <li>Supports diverse conditioning (text, image, unconditioned)</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-sky-100 to-blue-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-blue-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>Beats OccNet, ConvOccNet, IF-Net on IoU/Chamfer/F-Score</li>
+                        <li>Point completion with high accuracy</li>
+                        <li>Text-to-3D generation quality</li>
+                        <li>Fast inference (transformer-native processing)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <img src="images/3dshape2vecset_teaser.png" alt="3DShape2VecSet Results" class="rounded-lg shadow-md w-full object-cover h-48">
+                <img src="images/3dshape2vecset_novelty.png" alt="3DShape2VecSet Novelty" class="rounded-lg shadow-md w-full object-cover h-48">
+                <img src="images/3dshape2vecset_comparison.png" alt="3DShape2VecSet Comparisons" class="rounded-lg shadow-md w-full object-cover h-48">
+            </div>
+        </div>
+        
+        <!-- Michelangelo -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 border-t-4 border-purple-500">
+            <h3 class="text-2xl font-bold text-purple-600 mb-4">🎨 Michelangelo: The Multi-Modal Revolution</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        Just as <strong>Stable Diffusion</strong> revolutionized 2D generation with a CLIP-aligned latent space, <strong>Michelangelo</strong> applies the same principle to 3D: <strong>align 3D shapes with vision-language models</strong>. This enables semantic understanding and powerful conditional generation.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Core Architecture:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 mb-4">
+                        <li><strong>SITA-VAE:</strong> Shape-Image-Text Alignment VAE</li>
+                        <li><strong>Three Encoders:</strong> Shape encoder (PointNet), CLIP image encoder, CLIP text encoder</li>
+                        <li><strong>Shared Latent:</strong> All three modalities map to aligned 512-D tokens</li>
+                        <li><strong>Neural Field Decoder:</strong> Reconstructs shape from latent tokens</li>
+                        <li><strong>Diffusion in Latent Space:</strong> ASLDM generates new shapes in aligned space</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-purple-700 mb-3">Multi-Modal Performance:</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Text-to-3D (ST-S)</td>
+                            <td class="text-green-600 font-bold">16.647</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Image-to-3D (SI-S)</td>
+                            <td class="text-green-600 font-bold">Best</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">Coverage</td>
+                            <td class="text-green-600 font-bold">×3 improvement</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Key:</strong> Alignment with CLIP dramatically improves semantic control and diversity</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-purple-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>First to align 3D with CLIP embeddings</li>
+                        <li>Multi-modal contrastive learning for 3D</li>
+                        <li>Domain gap reduction via vision-language alignment</li>
+                        <li>Unified generation for text/image conditioning</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-pink-100 to-rose-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-purple-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>SOTA text-to-3D generation quality</li>
+                        <li>SOTA on image-to-3D task</li>
+                        <li>3× coverage improvement (diversity)</li>
+                        <li>Semantic alignment with language</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded">
+                <img src="images/michelangelo_teaser.png" alt="Michelangelo Multi-Modal Results" class="rounded-lg shadow-md w-full object-cover h-56">
+                <p class="text-xs text-gray-600 mt-2">Michelangelo demonstrates multi-modal generation from text, images, and shape descriptions</p>
+            </div>
+        </div>
+        
+        <!-- TRELLIS -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 border-t-4 border-green-500">
+            <h3 class="text-2xl font-bold text-green-600 mb-4">🏗️ TRELLIS: Structured Latents for Versatility</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        Where VecSet prioritizes compression, <strong>TRELLIS (Structured LATents)</strong> prioritizes <strong>spatial structure and versatility</strong>. The breakthrough insight: <em>if we know where surface points should be in 3D space, we can decode to multiple formats</em> from the same latent representation.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Core Architecture:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 mb-4">
+                        <li><strong>Sparse 3D Grid:</strong> 16³ or 64³ voxel grid with localized latents only at surface voxels</li>
+                        <li><strong>SLAT (Structured Latents):</strong> Each voxel stores 64-D local feature vectors</li>
+                        <li><strong>Fusion:</strong> Combines multiview image features from vision foundation model (e.g., DINO)</li>
+                        <li><strong>Multi-Format Decoders:</strong> Same latents → 3D Gaussians, NeRFs, or mesh surfaces</li>
+                        <li><strong>Rectified Flow Transformer:</strong> 2B parameter model generates SLAT tokens</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-green-700 mb-3">Generation Speed & Quality:</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Speed (10s generation)</td>
+                            <td class="text-green-600 font-bold">~10 seconds</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Model Scale</td>
+                            <td class="text-green-600 font-bold">2B parameters</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">Train Data</td>
+                            <td class="text-green-600 font-bold">500K objects</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Versatility:</strong> Gaussian, NeRF, or mesh output from same model</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-green-100 to-emerald-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-green-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>Sparse voxel grid with localized latents</li>
+                        <li>Multi-format output decoding</li>
+                        <li>Large-scale training (2B params, 500K data)</li>
+                        <li>Editing via latent manipulation</li>
+                        <li>Vision foundation model fusion (DINO)</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-emerald-100 to-teal-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-green-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>SOTA generation quality on diverse objects</li>
+                        <li>Coherent Gaussian, NeRF, and mesh outputs</li>
+                        <li>Text and image-conditioned generation</li>
+                        <li>Local 3D editing capabilities</li>
+                        <li>Production-ready pipeline</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded">
+                <img src="images/trellis_ui.png" alt="TRELLIS UI and Results" class="rounded-lg shadow-md w-full object-cover h-56">
+                <p class="text-xs text-gray-600 mt-2">TRELLIS demonstrates versatile outputs and user interaction capabilities</p>
+            </div>
+        </div>
+        
+        <!-- LATTICE -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 border-t-4 border-emerald-500">
+            <h3 class="text-2xl font-bold text-emerald-600 mb-4">🚀 LATTICE: The Scaling Breakthrough</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        <strong>LATTICE</strong> unifies VecSet's compression with TRELLIS's spatial structure through an elegant innovation: <strong>voxel-anchored query tokens</strong>. Unlike TRELLIS (only surface voxels), LATTICE uses a dense grid with localizable positions known at test time—enabling <strong>dynamic resolution scaling</strong>.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Core Architecture:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 mb-4">
+                        <li><strong>VoxSet Representation:</strong> Tokens anchored at 64³ (or higher) voxel grid positions</li>
+                        <li><strong>Localizable Queries:</strong> Position information known at inference (unlike learned queries)</li>
+                        <li><strong>RoPE Positional Embeddings:</strong> Enables extrapolation to higher resolutions</li>
+                        <li><strong>Test-Time Scaling:</strong> 6K tokens at train time → 12K+ at inference</li>
+                        <li><strong>Large Scale Model:</strong> 4.5B parameters trained on massive datasets</li>
+                    </ul>
+                </div>
+                <div class="bg-emerald-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-emerald-700 mb-3">Scaling Performance:</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Model Size</td>
+                            <td class="text-green-600 font-bold">4.5B params</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Train Tokens</td>
+                            <td class="text-green-600 font-bold">~6K</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Inference Scaling</td>
+                            <td class="text-green-600 font-bold">6K → 12K+ tokens</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">Scaling Gains</td>
+                            <td class="text-green-600 font-bold">Consistent improvement</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Breakthrough:</strong> Test-time resolution scaling without retraining</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-emerald-100 to-cyan-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-emerald-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>Voxel-anchored query tokens (localizable)</li>
+                        <li>RoPE positional embeddings for scaling</li>
+                        <li>Test-time resolution extrapolation</li>
+                        <li>Hybrid compression + structure approach</li>
+                        <li>Massive scale training (4.5B params)</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-cyan-100 to-blue-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-emerald-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>SOTA high-fidelity generation quality</li>
+                        <li>Dynamic resolution scaling capability</li>
+                        <li>Consistent scaling benefits up to 4.5B</li>
+                        <li>Pareto frontier: compression + structure</li>
+                        <li>Best of both VecSet and TRELLIS</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <img src="images/teaser.jpg" alt="LATTICE Generation Results" class="rounded-lg shadow-md w-full object-cover h-56 mb-4">
+            <p class="text-xs text-gray-600">LATTICE demonstrates high-fidelity 3D generation with scaling capabilities</p>
+        </div>
+    </section>
+
+    <!-- Section 3: The Convergence -->
+    <section id="convergence" class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-green-600 pb-4">Part 3: Bridging Generation & Reconstruction—CUPID & SAM 3D</h2>
+        
+        <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-8 mb-8 border-l-4 border-orange-500">
+            <h3 class="text-lg font-bold text-gray-800 mb-3">🎭 The Fundamental Tension</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-green-700 mb-2">✨ Pure Generative Models</h4>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>💡 Imagine diverse possibilities from scratch</li>
+                        <li>🎨 High creativity and unbiased priors</li>
+                        <li>⚠️ Can produce geometrically inconsistent shapes</li>
+                        <li>❌ May neglect details visible in input image</li>
+                        <li>❌ Struggle with texel-level consistency</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-blue-700 mb-2">🎯 Pure Reconstruction Models</h4>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>🔍 Faithfully preserve observed visual details</li>
+                        <li>📐 Geometrically accurate and consistent</li>
+                        <li>⚠️ Cannot hallucinate occluded regions</li>
+                        <li>❌ Limited by input image resolution/quality</li>
+                        <li>❌ Cannot improve on poor input images</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-gray-700 mt-4 text-sm">
+                The solution: <strong>jointly model both aspects</strong> through explicit geometric reasoning (pose estimation) or multi-stage refinement.
+            </p>
+        </div>
+        
+        <!-- CUPID -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 border-t-4 border-orange-500">
+            <h3 class="text-2xl font-bold text-orange-600 mb-4">🎀 CUPID: Pose-Aware Generative Reconstruction</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        <strong>CUPID</strong> bridges generation and reconstruction by explicitly modeling <strong>camera pose and object geometry jointly</strong>. The key insight: if we know where the camera is relative to the object, we can directly inject image features into the correct 3D locations.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Two-Stage Pipeline:</h4>
+                    <div class="space-y-3 mb-6">
+                        <div class="bg-orange-50 p-4 rounded">
+                            <p class="font-semibold text-orange-700 mb-2">Stage 1: Pose Estimation & Rough Geometry</p>
+                            <ul class="text-sm text-gray-600 list-disc list-inside">
+                                <li>Generate occupancy grid (rough shape)</li>
+                                <li>Generate UV cube (3D-to-2D surface correspondences)</li>
+                                <li>Solve camera pose via PnP (Perspective-n-Point)</li>
+                                <li>Output: Estimated camera matrix and approximate geometry</li>
+                            </ul>
+                        </div>
+                        <div class="bg-red-50 p-4 rounded">
+                            <p class="font-semibold text-red-700 mb-2">Stage 2: Pixel-Aligned Refinement</p>
+                            <ul class="text-sm text-gray-600 list-disc list-inside">
+                                <li>Generate high-fidelity appearance & geometry features</li>
+                                <li><strong>CRITICAL:</strong> Inject pixel-aligned features from input</li>
+                                <li>Prevents "color drift" (texture-ground-to-3D drift)</li>
+                                <li>Preserves fine details visible in input image</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-orange-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-orange-700 mb-3">Technical Achievements:</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Color Consistency</td>
+                            <td class="text-green-600 font-bold">Preserved</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Geometry Quality</td>
+                            <td class="text-green-600 font-bold">SOTA</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">Input Faithfulness</td>
+                            <td class="text-green-600 font-bold">High</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Key Innovation:</strong> Explicit pose modeling enables pixel-to-3D alignment, solving the core weakness of pure generative models.</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-orange-100 to-red-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-orange-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>Joint pose + geometry generation</li>
+                        <li>UV cube for 3D-2D correspondence</li>
+                        <li>PnP-based pose estimation</li>
+                        <li>Pixel-aligned feature injection</li>
+                        <li>Color drift elimination</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-red-100 to-rose-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-orange-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>SOTA generative reconstruction quality</li>
+                        <li>Faithful texture preservation</li>
+                        <li>High geometric accuracy</li>
+                        <li>Superior on benchmark datasets</li>
+                        <li>Hybrid approach benefits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SAM 3D -->
+        <div class="bg-white rounded-lg shadow-lg p-8 border-t-4 border-teal-500">
+            <h3 class="text-2xl font-bold text-teal-600 mb-4">🚀 SAM 3D: Scale and Real-World Grounding</h3>
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div>
+                    <p class="text-gray-700 mb-4">
+                        Inspired by the success of SAM (Segment Anything) in 2D vision, <strong>SAM 3D</strong> applies massive-scale learning to 3D generation. The philosophy: <em>if we train on diverse real-world 3D data at scale, we learn robust priors for handling occlusion, clutter, and complex scenes</em>.
+                    </p>
+                    
+                    <h4 class="font-semibold text-gray-800 mb-3">Model-in-the-Loop Paradigm:</h4>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600 mb-4">
+                        <li><strong>Stage 1:</strong> Coarse 3D layout prediction (bounding box, rotation, scale)</li>
+                        <li><strong>Stage 2:</strong> Per-object refinement (shape and texture)</li>
+                        <li><strong>Stage 3:</strong> Fine-grained surface details and appearances</li>
+                        <li><strong>Learning Signal:</strong> Human feedback + synthetic data augmentation</li>
+                        <li><strong>Scale:</strong> Trained on massive real-world 3D datasets (100K+)</li>
+                    </ul>
+                </div>
+                <div class="bg-teal-50 p-6 rounded-lg">
+                    <h4 class="font-bold text-teal-700 mb-3">Real-World Performance:</h4>
+                    <table class="w-full text-sm">
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Occlusion Handling</td>
+                            <td class="text-green-600 font-bold">Excellent</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Real Image Quality</td>
+                            <td class="text-green-600 font-bold">SOTA</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="font-semibold text-gray-700 py-1">Multi-Object Scenes</td>
+                            <td class="text-green-600 font-bold">Supported</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold text-gray-700 py-1">Cross-Dataset Gen.</td>
+                            <td class="text-green-600 font-bold">Strong</td>
+                        </tr>
+                    </table>
+                    <p class="text-xs text-gray-600 mt-4"><strong>Strength:</strong> Real-world grounding through massive diverse training data</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gradient-to-br from-teal-100 to-cyan-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-teal-900 mb-2">🔑 Key Innovations:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>Multi-stage coarse-to-fine pipeline</li>
+                        <li>Human-in-the-loop data collection</li>
+                        <li>Massive-scale training (100K+ shapes)</li>
+                        <li>Real-world occlusion handling</li>
+                        <li>Multi-modal (shape + texture)</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-cyan-100 to-blue-100 p-4 rounded">
+                    <p class="text-sm font-semibold text-teal-900 mb-2">📊 Achievements:</p>
+                    <ul class="text-xs text-gray-700 space-y-1 list-disc list-inside">
+                        <li>SOTA real-world image-to-3D</li>
+                        <li>Handles cluttered scenes well</li>
+                        <li>User preference rankings (ELO)</li>
+                        <li>Cross-dataset generalization</li>
+                        <li>Robust to diverse input quality</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4">
+                <img src="images/sam3d_paradigm.png" alt="SAM 3D Paradigm" class="rounded-lg shadow-md w-full object-cover h-48">
+                <img src="images/sam3d_teaser.jpg" alt="SAM 3D Results" class="rounded-lg shadow-md w-full object-cover h-48">
+                <img src="images/sam3d_comparison.jpg" alt="SAM 3D Comparisons" class="rounded-lg shadow-md w-full object-cover h-48">
+            </div>
+            <p class="text-xs text-gray-600 mt-4">SAM 3D demonstrates real-world robustness through large-scale diverse training and human feedback</p>
+        </div>
+    </section>
+
+    <!-- Key Takeaways -->
+    <section class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-indigo-600 pb-4">Part 5: Takeaways -- From Compression to Structure to Scaling</h2>
+        
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12">
+            <h3 class="font-bold text-gray-800 mb-6">The Evolution of 3D Representations</h3>
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-lg border-l-4 border-blue-500">
+                    <h4 class="font-bold text-blue-700 mb-3">Phase 1: Compression (VecSet)</h4>
+                    <p class="text-sm text-gray-700 mb-3">
+                        Query tokens + cross-attention maximize compression. Enables fast inference and transformer processing.
+                    </p>
+                    <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Size: 1K-4K tokens</li>
+                        <li>Strength: Compact, efficient</li>
+                        <li>Weakness: No spatial structure</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg border-l-4 border-purple-500">
+                    <h4 class="font-bold text-purple-700 mb-3">Phase 2: Structure (SLAT)</h4>
+                    <p class="text-sm text-gray-700 mb-3">
+                        Sparse 3D grids anchor latents to spatial positions. Enables multi-format decoding and editing.
+                    </p>
+                    <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Size: ~20K tokens (64³ sparse)</li>
+                        <li>Strength: Spatial information</li>
+                        <li>Weakness: Fixed resolution</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-lg border-l-4 border-green-500">
+                    <h4 class="font-bold text-green-700 mb-3">Phase 3: Scaling (VoxSet)</h4>
+                    <p class="text-sm text-gray-700 mb-3">
+                        Voxel-anchored queries with RoPE embeddings enable test-time scaling. Combines compression + structure.
+                    </p>
+                    <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside">
+                        <li>Size: 6K-12K+ tokens (scalable)</li>
+                        <li>Strength: Pareto frontier</li>
+                        <li>Weakness: Training complexity</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Comparison Table -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-12 overflow-x-auto">
+            <h3 class="font-bold text-gray-800 mb-6">Comprehensive Six-Paper Comparison</h3>
+            <table class="w-full border-collapse text-sm">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="border border-gray-300 px-3 py-2 text-left">Paper</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Representation</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Size</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Model Scale</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Key Innovation</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Best For</th>
+                        <th class="border border-gray-300 px-3 py-2 text-left">Primary Contribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover:bg-blue-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-blue-600">3DShape2VecSet</td>
+                        <td class="border border-gray-300 px-3 py-2">Unstructured Vector Set</td>
+                        <td class="border border-gray-300 px-3 py-2">1K-4K vectors</td>
+                        <td class="border border-gray-300 px-3 py-2">Standard</td>
+                        <td class="border border-gray-300 px-3 py-2">Cross-attention queries</td>
+                        <td class="border border-gray-300 px-3 py-2">Fast, diverse generation</td>
+                        <td class="border border-gray-300 px-3 py-2">Foundation: vectors work in 3D</td>
+                    </tr>
+                    <tr class="hover:bg-purple-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-purple-600">Michelangelo</td>
+                        <td class="border border-gray-300 px-3 py-2">CLIP-Aligned Tokens</td>
+                        <td class="border border-gray-300 px-3 py-2">512 tokens</td>
+                        <td class="border border-gray-300 px-3 py-2">Large</td>
+                        <td class="border border-gray-300 px-3 py-2">Multi-modal alignment</td>
+                        <td class="border border-gray-300 px-3 py-2">Text/image conditioning</td>
+                        <td class="border border-gray-300 px-3 py-2">Semantic: align 3D with CLIP</td>
+                    </tr>
+                    <tr class="hover:bg-green-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-green-600">TRELLIS</td>
+                        <td class="border border-gray-300 px-3 py-2">Sparse Voxel Grid (SLAT)</td>
+                        <td class="border border-gray-300 px-3 py-2">~20K tokens (64³)</td>
+                        <td class="border border-gray-300 px-3 py-2">2B params</td>
+                        <td class="border border-gray-300 px-3 py-2">Structured latents</td>
+                        <td class="border border-gray-300 px-3 py-2">Multi-format outputs</td>
+                        <td class="border border-gray-300 px-3 py-2">Structure: spatial grids enable versatility</td>
+                    </tr>
+                    <tr class="hover:bg-emerald-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-emerald-600">LATTICE</td>
+                        <td class="border border-gray-300 px-3 py-2">VoxSet (Hybrid)</td>
+                        <td class="border border-gray-300 px-3 py-2">6K-12K+ (scalable)</td>
+                        <td class="border border-gray-300 px-3 py-2">4.5B params</td>
+                        <td class="border border-gray-300 px-3 py-2">Test-time scaling + RoPE</td>
+                        <td class="border border-gray-300 px-3 py-2">High-fidelity, scalable gen.</td>
+                        <td class="border border-gray-300 px-3 py-2">Scaling: localizable positions enable extrapolation</td>
+                    </tr>
+                    <tr class="hover:bg-orange-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-orange-600">CUPID</td>
+                        <td class="border border-gray-300 px-3 py-2">Pose + Geometry</td>
+                        <td class="border border-gray-300 px-3 py-2">Occupancy + UV grid</td>
+                        <td class="border border-gray-300 px-3 py-2">Standard</td>
+                        <td class="border border-gray-300 px-3 py-2">Explicit pose estimation</td>
+                        <td class="border border-gray-300 px-3 py-2">Faithful reconstruction</td>
+                        <td class="border border-gray-300 px-3 py-2">Alignment: pose enables pixel-3D mapping</td>
+                    </tr>
+                    <tr class="hover:bg-teal-50">
+                        <td class="border border-gray-300 px-3 py-2 font-bold text-teal-600">SAM 3D</td>
+                        <td class="border border-gray-300 px-3 py-2">Multi-Modal Flows</td>
+                        <td class="border border-gray-300 px-3 py-2">Coarse→Fine</td>
+                        <td class="border border-gray-300 px-3 py-2">Very Large</td>
+                        <td class="border border-gray-300 px-3 py-2">Model-in-loop + scale</td>
+                        <td class="border border-gray-300 px-3 py-2">Real-world generation</td>
+                        <td class="border border-gray-300 px-3 py-2">Scale: massive diverse data + human feedback</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="grid grid-cols-1 gap-6 mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-blue-500">
+                <h4 class="font-bold text-blue-700 mb-2 text-lg">1. Foundation: Vector Sets Work for 3D</h4>
+                <p class="text-gray-700"><strong>3DShape2VecSet</strong> proved that unstructured vector sets—rather than voxel grids—are an effective 3D representation. Cross-attention queries compress 3D surfaces into compact tokens perfect for transformers. <strong>Quantitative proof:</strong> F-Score of 0.999 on ShapeNet reconstruction (vs OccNet: 0.858, IF-Net: 0.967).</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-purple-500">
+                <h4 class="font-bold text-purple-700 mb-2 text-lg">2. Alignment: Semantic Understanding Matters</h4>
+                <p class="text-gray-700"><strong>Michelangelo</strong> introduced the crucial insight that aligning 3D with vision-language models (CLIP) dramatically improves semantic control. <strong>3× improvement in coverage</strong> and best-in-class text-to-3D generation. The SITA-VAE bridges the modality gap through contrastive learning.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-green-500">
+                <h4 class="font-bold text-green-700 mb-2 text-lg">3. Structure: Sparse Grids Enable Versatility</h4>
+                <p class="text-gray-700"><strong>TRELLIS</strong> proved that adding spatial structure via sparse 3D grids dramatically improves downstream task performance. Same latents can decode to 3D Gaussians, NeRFs, or meshes—enabling rendering, editing, and diverse applications. Scale reaches 2B parameters on 500K objects.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-emerald-500">
+                <h4 class="font-bold text-emerald-700 mb-2 text-lg">4. Scaling: Positional Information Enables Extrapolation</h4>
+                <p class="text-gray-700"><strong>LATTICE</strong> achieves the Pareto frontier by combining compression (VecSet) with structure (SLAT) through voxel-anchored queries. Crucially, RoPE positional embeddings enable <strong>test-time resolution scaling (6K→12K tokens)</strong> without retraining. Models up to 4.5B parameters show consistent scaling benefits.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-orange-500">
+                <h4 class="font-bold text-orange-700 mb-2 text-lg">5. Alignment: Explicit Geometry Bridges Generation & Reconstruction</h4>
+                <p class="text-gray-700"><strong>CUPID</strong> solves a fundamental problem: how to combine generative priors with reconstruction faithfulness. By explicitly modeling camera pose and enabling pixel-aligned feature injection, CUPID achieves state-of-the-art reconstruction quality while preserving generative diversity and texture consistency.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-teal-500">
+                <h4 class="font-bold text-teal-700 mb-2 text-lg">6. Data at Scale: Real-World Grounding Drives Performance</h4>
+                <p class="text-gray-700"><strong>SAM 3D</strong> demonstrates that massive-scale training on real-world 3D data (100K+) with human-in-the-loop refinement produces robust models that generalize well. Multi-stage coarse-to-fine generation and per-object refinement handle occlusion and clutter naturally, achieving SOTA on real image-to-3D tasks.</p>
+            </div>
+        </div>
+
+
+    <!-- Section 4: Future Directions -->
+    <section id="future" class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-pink-600 pb-4">Part 5: Future Research Directions</h2>
+        
+        <div class="grid grid-cols-3 gap-6 mb-12">
+            <div class="bg-gradient-to-br from-blue-100 to-cyan-100 rounded-lg shadow-lg p-8 hover:shadow-xl transition">
+                <h3 class="text-xl font-bold text-blue-900 mb-4">🏙️ Scene-Level Generation</h3>
+                <p class="text-gray-700 mb-4">
+                    Current methods excel at single objects. The frontier is <strong>entire scenes</strong>—rooms, outdoor environments, and complex compositions.
+                </p>
+                <ul class="text-sm text-gray-600 space-y-2">
+                    <li>✓ Multi-object relationships</li>
+                    <li>✓ Spatial coherence & constraints</li>
+                    <li>✓ Physical plausibility</li>
+                    <li>✓ Semantic consistency</li>
+                </ul>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg shadow-lg p-8 hover:shadow-xl transition">
+                <h3 class="text-xl font-bold text-green-900 mb-4">🦾 Articulated Objects</h3>
+                <p class="text-gray-700 mb-4">
+                    Beyond static models: generating objects with <strong>joints, limbs, and moving parts</strong>.
+                </p>
+                <ul class="text-sm text-gray-600 space-y-2">
+                    <li>✓ Rigged character generation</li>
+                    <li>✓ Semantic part understanding</li>
+                    <li>✓ Motion-aware representations</li>
+                    <li>✓ Animation-ready assets</li>
+                </ul>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg shadow-lg p-8 hover:shadow-xl transition">
+                <h3 class="text-xl font-bold text-purple-900 mb-4">📐 Mesh Topology</h3>
+                <p class="text-gray-700 mb-4">
+                    From "soup of triangles" to <strong>functionally correct manifold meshes</strong> for professional workflows.
+                </p>
+                <ul class="text-sm text-gray-600 space-y-2">
+                    <li>✓ Watertight, manifold meshes</li>
+                    <li>✓ Quad-based topology</li>
+                    <li>✓ Production-ready output</li>
+                    <li>✓ Topological consistency</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-8 border-l-4 border-indigo-500">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">🔮 Emerging Challenges & Opportunities</h3>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-indigo-700 mb-3">Challenges</h4>
+                    <ul class="text-sm text-gray-700 space-y-2">
+                        <li>📊 Scarcity of high-quality 3D training data</li>
+                        <li>🎯 Multi-modal conditioning ambiguity</li>
+                        <li>⚡ Computational efficiency at scale</li>
+                        <li>🔗 Physical simulation integration</li>
+                        <li>🎬 Temporal coherence for dynamic scenes</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-purple-700 mb-3">Opportunities</h4>
+                    <ul class="text-sm text-gray-700 space-y-2">
+                        <li>🌐 Synthetic data generation pipelines</li>
+                        <li>💡 User-in-the-loop editing</li>
+                        <li>🚀 Efficiency through neural compression</li>
+                        <li>🤖 Active learning for data collection</li>
+                        <li>🔄 Generative models for content iteration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>        
+
+    <!-- Paper Summary Table -->
+    <section class="max-w-6xl mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-4 border-gray-600 pb-4">Paper Summary & Key Metrics</h2>
+        
+        <div class="overflow-x-auto bg-white rounded-lg shadow-lg mb-8">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-800 text-white">
+                        <th class="px-4 py-3 text-left">Paper</th>
+                        <th class="px-4 py-3 text-left">Representation</th>
+                        <th class="px-4 py-3 text-left">Architecture</th>
+                        <th class="px-4 py-3 text-left">Model Size</th>
+                        <th class="px-4 py-3 text-left">Key Metrics / Results</th>
+                        <th class="px-4 py-3 text-left">Primary Achievement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b hover:bg-blue-50">
+                        <td class="px-4 py-3 font-semibold text-blue-600">3DShape2VecSet</td>
+                        <td class="px-4 py-3"><span class="bg-blue-100 px-2 py-1 rounded text-xs">Vector Set</span></td>
+                        <td class="px-4 py-3 text-xs">Cross-attention queries + neural field decoder</td>
+                        <td class="px-4 py-3">Standard</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>F-Score:</strong> 0.999<br/>
+                            <strong>Chamfer:</strong> 0.026<br/>
+                            <strong>IoU:</strong> 0.965
+                        </td>
+                        <td class="px-4 py-3 text-xs">Foundation: vectors are efficient 3D representation</td>
+                    </tr>
+                    <tr class="border-b hover:bg-purple-50">
+                        <td class="px-4 py-3 font-semibold text-purple-600">Michelangelo</td>
+                        <td class="px-4 py-3"><span class="bg-purple-100 px-2 py-1 rounded text-xs">CLIP-Aligned</span></td>
+                        <td class="px-4 py-3 text-xs">SITA-VAE + ASLDM (diffusion)</td>
+                        <td class="px-4 py-3">Large</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>Text-to-3D (ST-S):</strong> 16.647<br/>
+                            <strong>Coverage:</strong> 3×<br/>
+                            <strong>Image-to-3D:</strong> SOTA
+                        </td>
+                        <td class="px-4 py-3 text-xs">Multi-modal: CLIP alignment enables semantic control</td>
+                    </tr>
+                    <tr class="border-b hover:bg-green-50">
+                        <td class="px-4 py-3 font-semibold text-green-600">TRELLIS</td>
+                        <td class="px-4 py-3"><span class="bg-green-100 px-2 py-1 rounded text-xs">Sparse SLAT</span></td>
+                        <td class="px-4 py-3 text-xs">Rectified Flow (2B) + multi-format decoders</td>
+                        <td class="px-4 py-3">2B parameters</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>Speed:</strong> ~10 sec<br/>
+                            <strong>Train Data:</strong> 500K objects<br/>
+                            <strong>Quality:</strong> SOTA
+                        </td>
+                        <td class="px-4 py-3 text-xs">Structure: spatial grids enable versatile outputs (Gaussians/NeRF/Mesh)</td>
+                    </tr>
+                    <tr class="border-b hover:bg-emerald-50">
+                        <td class="px-4 py-3 font-semibold text-emerald-600">LATTICE</td>
+                        <td class="px-4 py-3"><span class="bg-emerald-100 px-2 py-1 rounded text-xs">VoxSet</span></td>
+                        <td class="px-4 py-3 text-xs">Voxel-anchored queries + RoPE (4.5B)</td>
+                        <td class="px-4 py-3">4.5B parameters</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>Scaling:</strong> 6K→12K tokens<br/>
+                            <strong>Quality:</strong> SOTA<br/>
+                            <strong>Consistent:</strong> scaling gains
+                        </td>
+                        <td class="px-4 py-3 text-xs">Scaling: test-time resolution extrapolation via positional embeddings</td>
+                    </tr>
+                    <tr class="border-b hover:bg-orange-50">
+                        <td class="px-4 py-3 font-semibold text-orange-600">CUPID</td>
+                        <td class="px-4 py-3"><span class="bg-orange-100 px-2 py-1 rounded text-xs">Pose+Geometry</span></td>
+                        <td class="px-4 py-3 text-xs">Two-stage: pose estimation + refinement</td>
+                        <td class="px-4 py-3">Standard</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>Color Fidelity:</strong> Preserved<br/>
+                            <strong>Geometry:</strong> SOTA<br/>
+                            <strong>Reconstruction:</strong> Faithful
+                        </td>
+                        <td class="px-4 py-3 text-xs">Alignment: explicit pose enables pixel-aligned 3D refinement</td>
+                    </tr>
+                    <tr class="hover:bg-teal-50">
+                        <td class="px-4 py-3 font-semibold text-teal-600">SAM 3D</td>
+                        <td class="px-4 py-3"><span class="bg-teal-100 px-2 py-1 rounded text-xs">Multi-Modal</span></td>
+                        <td class="px-4 py-3 text-xs">Multi-stage coarse-to-fine + human loop</td>
+                        <td class="px-4 py-3">Very Large</td>
+                        <td class="px-4 py-3 text-xs">
+                            <strong>Real-world:</strong> SOTA<br/>
+                            <strong>ELO ranking:</strong> Highest<br/>
+                            <strong>Data scale:</strong> 100K+
+                        </td>
+                        <td class="px-4 py-3 text-xs">Scale: massive diverse data + human feedback for real-world robustness</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-8">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Research Impact Timeline</h3>
+            <div class="space-y-3">
+                <div class="flex items-start gap-4">
+                    <div class="bg-blue-500 text-white px-3 py-1 rounded text-sm font-bold min-w-fit">2024</div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Foundation & Alignment (3DShape2VecSet, Michelangelo)</p>
+                        <p class="text-sm text-gray-600">Proved vectors work and established multi-modal alignment paradigm</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="bg-green-500 text-white px-3 py-1 rounded text-sm font-bold min-w-fit">2025</div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Structure & Versatility (TRELLIS, LATTICE)</p>
+                        <p class="text-sm text-gray-600">Added spatial structure for versatility and scaling capabilities</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4">
+                    <div class="bg-orange-500 text-white px-3 py-1 rounded text-sm font-bold min-w-fit">2025</div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Convergence & Real-World (CUPID, SAM 3D)</p>
+                        <p class="text-sm text-gray-600">Bridged generation/reconstruction and scaled to real-world scenarios</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12 mt-16">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4">Survey Papers</h4>
+                    <ul class="text-sm space-y-2 text-gray-300">
+                        <li>3DShape2VecSet (SIGGRAPH 2024)</li>
+                        <li>Michelangelo (NeurIPS 2023)</li>
+                        <li>TRELLIS (CVPR 2025)</li>
+                        <li>LATTICE (CVPR 2026)</li>
+                        <li>CUPID (CVPR 2026)</li>
+                        <li>SAM 3D (2024)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Key Concepts</h4>
+                    <ul class="text-sm space-y-2 text-gray-300">
+                        <li>Neural Fields</li>
+                        <li>Diffusion Models</li>
+                        <li>Latent Spaces</li>
+                        <li>Multi-modal Learning</li>
+                        <li>Flow Matching</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Applications</h4>
+                    <ul class="text-sm space-y-2 text-gray-300">
+                        <li>Gaming & VR</li>
+                        <li>Digital Twins</li>
+                        <li>Creative Design</li>
+                        <li>Research & Academia</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-gray-700 mb-6">
+            <p class="text-center text-gray-400 text-sm">
+                Comprehensive survey of the 3D generative modeling frontier (2023-2026). 
+                Designed for beginners to understand the connections between papers and paradigm shifts.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
