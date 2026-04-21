@@ -151,7 +151,7 @@
 
         <section>
             <h2>Lifting Intelligence: Leveraging 2D Priors</h2>
-            <p>Because we couldn't train 3D models from scratch, the research community's first breakthrough came from "borrowing" the intelligence of pre-trained 2D diffusion models. The core idea is <em>optimization by rendering</em>: leverage the fact that a model like Stable Diffusion already "knows" what a 3D object should look like from every angle.</p>
+            <p>Because training 3D models from scratch is very difficult, the research community's first breakthrough came from "borrowing" the intelligence of pre-trained 2D diffusion models. The core idea is <em>optimization by rendering</em>: leverage the fact that a model like Stable Diffusion already "knows" what a 3D object should look like from every angle.</p>
             
             <h3>The 2D-to-3D Lifting Workflow</h3>
             <p>Methods like <strong>DreamFusion</strong> established a standard four-step workflow to bridge this gap:</p>
@@ -173,20 +173,21 @@
             <h3>Critical Failures of Lifting Methods</h3>
             <p>While innovative, these methods suffer from three fatal flaws that prevent them from being "production-ready":</p>
             <ul>
-                <li><strong>The Janus Problem:</strong> Since the 2D teacher only judges one slice at a time, it lacks global 3D awareness. This leads to objects with multiple faces (multi-headed geometry).
+                <li><strong>The Janus Problem:</strong> Since the 2D teacher only judges one slice at a time, it lacks global 3D awareness. This leads to objects with multiple faces or inconsistent geometry (multi-headed geometry).
                     <div class="image-placeholder">
                         <img src="images/Janus_problem.png" alt="The Janus Problem" style="max-height: 250px;">
                         <span>A 3D model showing multi-faced geometry (The Janus Problem)</span>
                     </div>
                 </li>
-                <li><strong>Optimization Latency:</strong> Because these models <em>optimize</em> rather than <em>infer</em>, generating a single asset can take 30 to 60 minutes of GPU time.</li>
+                <li><strong>Optimization Latency:</strong> Because these models <em>optimize</em> its output step by step rather than <em>infer</em>, generating a single asset can take 30 to 60 minutes of GPU time.</li>
                 <li><strong>The SDS Trade-off:</strong> The resulting geometry often appears "oversaturated" or "cartoonish." To satisfy all viewpoints simultaneously, the model often settles for an "average" look that loses fine texture.</li>
             </ul>
         </section>
 
         <section>
             <h2>Transitioning to "Native" 3D Generation</h2>
-            <p>The failures of 2D lifting led to the emergence of <strong>Native 3D</strong> models. What makes a model native? Unlike lifting methods that "trick" a 2D model into seeing depth, native models are trained directly on 3D geometric data. They don't guess—they understand space.</p>
+            <p>The failures of 2D lifting led to the emergence of <strong>Native 3D</strong> models.</p>
+            <p>What makes a model native? Unlike lifting methods that "trick" a 2D model into seeing depth, native models are trained directly on 3D geometric data. They don't guess—they understand space.</p>
             
             <table>
                 <thead>
@@ -238,9 +239,9 @@
                 <li><strong>Voxels (Volumetric Pixels):</strong> A voxel is a 3D grid of volume elements. Each "cell" in the grid contains information about whether it is empty or filled, and what color it is. 
                     <br><em>Pros:</em> They are mathematically structured just like 2D pixels, making it easy to use powerful 3D Convolutional Neural Networks (CNNs).
                     <br><em>Cons (The Memory Wall):</em> Memory scales at O(N<sup>3</sup>). If you want to double the resolution of your model, you need 8x more memory. Achieving high-fidelity (e.g., 512<sup>3</sup>) is currently impossible on consumer GPUs.</li>
-                <li><strong>Point Clouds (Sparse Coordinates):</strong> Instead of a cloud of individual points floating in space, each with an (x, y, z) coordinate on the surface of an object.
-                    <br><em>Pros:</em> Extremely memory efficient because you only store data where the object actually exists.
-                    <br><em>Cons (Lack of Topology):</em> Point clouds have no "skin" (manifold surface) connecting the dots. They are "hollow," which makes them difficult to use for physics simulations (the object has no solid boundary) or high-quality rendering without complex post-processing.</li>
+                <li><strong>Point Clouds (Sparse Coordinates):</strong> A point cloud is a discrete set of data points in a three-dimensional coordinate system that represents the external surface of an object or environment.
+                    <br><em>Pros:</em> Extremely memory efficient because you only store data on the object's surface.
+                    <br><em>Cons (Lack of Topology):</em> Although point clouds define the shape of a surface, they lack topological connectivity; because there are no edges or faces linking the points, the data lacks a continuous "skin." This absence of a solid boundary makes them unsuitable for physics simulations or direct rendering without first reconstructing a mesh.</li>
             </ul>
 
             <h3>Continuous Representations: SDFs & NeRFs</h3>
