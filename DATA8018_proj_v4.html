@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Generation: A Survey</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #fcfcfc;
+            --text-color: #333;
+            --info-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Charter', 'Georgia', serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        header {
+            padding: 4rem 1rem 2rem;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        main {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+            color: var(--primary-color);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            color: var(--primary-color);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-block {
+            background-color: var(--info-bg);
+            border-left: 4px solid var(--accent-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: #f0f0f0;
+            border: 1px dashed #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+        }
+
+        th {
+            border-bottom: 2px solid var(--primary-color);
+            padding: 12px;
+            text-align: left;
+            background: none;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .latex {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 0;
+            color: #888;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Native 3D Latent Generation: A Survey</h1>
+        <p style="color: #666; margin-top: 1rem;">Exploring the transition from 2D priors to latent 3D intelligence.</p>
+    </header>
+    <main>
+        <section>
+            <h2>The 3D Generation Frontier</h2>
+            <p>While generative AI has achieved breathtaking fidelity in 2D image synthesis, the transition to native 3D content remains one of the most significant hurdles in modern machine learning. The task is deceptive: it is not merely about adding a depth dimension, but about modeling the underlying structural and geometric consistency that defines our physical reality.</p>
+            
+            <h3>Defining the Task & Applications</h3>
+            <p>At its core, 3D generation is the process of mapping a sparse input—such as a text prompt or a single 2D image—into a complete, navigable 3D asset. This is the "Black Box" challenge: hallucinating the hidden viewpoints and internal structures of an object that we only have partial information about.</p>
+
+            <div class="info-block">
+                <strong>Why 3D Generation Matters:</strong> 
+                <ul>
+                    <li><strong>Entertainment:</strong> Moving from month-long manual modeling to "one-shot" asset creation for AAA games and VR.</li>
+                    <li><strong>Robotics:</strong> Creating high-fidelity synthetic "Sim-to-Real" environments for training autonomous agents.</li>
+                    <li><strong>Industrial Design:</strong> Real-time prototyping and "Digital Twins" for architectural visualization and 3D printing.</li>
+                </ul>
+            </div>
+            
+            <h3>The Fundamental Scarcity: The Data Gap</h3>
+            <p>In 2D computer vision, we are spoiled by the abundance of the internet. Datasets like LAION-5B provide billions of paired image-text examples. In contrast, the 3D world faces a <strong>Data Gap</strong> of roughly 500:1. High-quality 3D assets are manually authored and scarce; even the largest datasets like <em>Objaverse</em> only scratch the surface of real-world diversity.</p>
+            
+            <div class="info-block">
+                <strong>The Supervised Learning Bottleneck:</strong> Without massive-scale 3D data, standard supervised learning fails to generalize. Unlike 2D pixels which are consistently structured, 3D representations (meshes, voxels, SDFs) are diverse and often non-differentiable, making it impossible to apply the "Stable Diffusion recipe" directly to 3D space.
+            </div>
+        </section>
+
+        <section>
+            <h2>Lifting Intelligence: Leveraging 2D Priors</h2>
+            <p>Because we couldn't train 3D models from scratch, the research community's first breakthrough came from "borrowing" the intelligence of pre-trained 2D diffusion models. The core idea is <em>optimization by rendering</em>: leverage the fact that a model like Stable Diffusion already "knows" what a 3D object should look like from every angle.</p>
+            
+            <h3>The 2D-to-3D Lifting Workflow</h3>
+            <p>Methods like <strong>DreamFusion</strong> established a standard four-step workflow to bridge this gap:</p>
+            <ol>
+                <li><strong>Initialize:</strong> Start with a 3D representation (usually a Neural Radiance Field, or NeRF).</li>
+                <li><strong>Render:</strong> Project the 3D volume into a 2D image from a random camera viewpoint.</li>
+                <li><strong>Criticize:</strong> Pass this 2D slice to a "Teacher" (a frozen 2D Diffusion model) to see if it looks realistic.</li>
+                <li><strong>Backpropagate:</strong> Use the teacher's feedback to update the internal 3D parameters.</li>
+            </ol>
+
+            <h3>Score Distillation Sampling (SDS)</h3>
+            <p>The mathematical engine of this lifting is <strong>Score Distillation Sampling (SDS)</strong>. It provides a gradient update from the 2D teacher to the 3D representation. It essentially says: "Shift the geometry of this 3D model so that this 2D projection looks more like the text prompt." It is a <em>distillation</em> of 2D knowledge into a 3D volume.</p>
+
+            <div class="image-placeholder" style="border: none; background: transparent; padding: 10px; display: flex; flex-direction: column; align-items: center;">
+                <img src="images/SDS.png" alt="SDS Feedback Loop" style="max-height: 250px; max-width: 100%; height: auto;">
+                <span style="font-size: 0.9rem; color: #666; margin-top: 10px;">SDS Workflow: 3D Representation → 2D Rendering → 2D Diffusion Feedback</span>
+            </div>
+
+            <h3>Critical Failures of Lifting Methods</h3>
+            <p>While innovative, these methods suffer from three fatal flaws that prevent them from being "production-ready":</p>
+            <ul>
+                <li><strong>The Janus Problem:</strong> Since the 2D teacher only judges one slice at a time, it lacks global 3D awareness. This leads to objects with multiple faces (multi-headed geometry).
+                    <div class="image-placeholder">
+                        <img src="images/Janus_problem.png" alt="The Janus Problem" style="max-height: 250px;">
+                        <span>A 3D model showing multi-faced geometry (The Janus Problem)</span>
+                    </div>
+                </li>
+                <li><strong>Optimization Latency:</strong> Because these models <em>optimize</em> rather than <em>infer</em>, generating a single asset can take 30 to 60 minutes of GPU time.</li>
+                <li><strong>The SDS Trade-off:</strong> The resulting geometry often appears "oversaturated" or "cartoonish." To satisfy all viewpoints simultaneously, the model often settles for an "average" look that loses fine texture.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Transitioning to "Native" 3D Generation</h2>
+            <p>The failures of 2D lifting led to the emergence of <strong>Native 3D</strong> models. What makes a model native? Unlike lifting methods that "trick" a 2D model into seeing depth, native models are trained directly on 3D geometric data. They don't guess—they understand space.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>2D-Lifting (Optimization-based)</th>
+                        <th>Native 3D (Inference-based)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Knowledge Source</td>
+                        <td>2D Image Priors (Implicit)</td>
+                        <td>3D Geometric Datasets (Explicit)</td>
+                    </tr>
+                    <tr>
+                        <td>Process</td>
+                        <td>Iterative Optimization</td>
+                        <td>Feed-forward Inference</td>
+                    </tr>
+                    <tr>
+                        <td>Inference Speed</td>
+                        <td>Minutes to Hours</td>
+                        <td>Milliseconds ("One-shot")</td>
+                    </tr>
+                    <tr>
+                        <td>Geometric Consistency</td>
+                        <td>Heuristic (prone to Janus)</td>
+                        <td>Inherently Consistent</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Early Representations: Voxels & Point Clouds</h3>
+            <p>To understand the journey of native 3D generation, we must first look at the most basic ways computers store 3D data. Think of these as the "atoms" of the 3D world.</p>
+
+            <div class="image-placeholder" style="flex-direction: row; gap: 20px; height: auto; border: none; background: transparent; display: flex;">
+                <div style="flex: 1; text-align: center; background: #f0f0f0; padding: 10px; border: 1px dashed #ccc;">
+                    <img src="images/voxel.png" alt="Voxel Representation" style="max-height: 200px; margin: 0 auto; display: block;">
+                    <p style="margin: 10px 0 0; font-size: 0.9rem; color: #666;">Voxel Grid</p>
+                </div>
+                <div style="flex: 1; text-align: center; background: #f0f0f0; padding: 10px; border: 1px dashed #ccc;">
+                    <img src="images/point_clouds.png" alt="Point Cloud Representation" style="max-height: 200px; margin: 0 auto; display: block;">
+                    <p style="margin: 10px 0 0; font-size: 0.9rem; color: #666;">Point Cloud</p>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>Voxels (Volumetric Pixels):</strong> A voxel is a 3D grid of volume elements. Each "cell" in the grid contains information about whether it is empty or filled, and what color it is. 
+                    <br><em>Pros:</em> They are mathematically structured just like 2D pixels, making it easy to use powerful 3D Convolutional Neural Networks (CNNs).
+                    <br><em>Cons (The Memory Wall):</em> Memory scales at O(N<sup>3</sup>). If you want to double the resolution of your model, you need 8x more memory. Achieving high-fidelity (e.g., 512<sup>3</sup>) is currently impossible on consumer GPUs.</li>
+                <li><strong>Point Clouds (Sparse Coordinates):</strong> Instead of a cloud of individual points floating in space, each with an (x, y, z) coordinate on the surface of an object.
+                    <br><em>Pros:</em> Extremely memory efficient because you only store data where the object actually exists.
+                    <br><em>Cons (Lack of Topology):</em> Point clouds have no "skin" (manifold surface) connecting the dots. They are "hollow," which makes them difficult to use for physics simulations (the object has no solid boundary) or high-quality rendering without complex post-processing.</li>
+            </ul>
+
+            <h3>Continuous Representations: SDFs & NeRFs</h3>
+            <p>To move past the "discrete" limitations, researchers developed <strong>Continuous Representations</strong>. Instead of storing data points, these methods use a Neural Network as a mathematical function to define the shape.</p>
+            
+            <ul>
+                <li><strong>Signed Distance Functions (SDFs):</strong> An MLP that predicts the distance to the nearest surface for any point (x, y, z).
+                    <ul>
+                        <li>If the value is negative, you are inside the object; if positive, you are outside. This provides a mathematically smooth surface.</li>
+                    </ul>
+                </li>
+                <li><strong>Neural Radiance Fields (NeRFs):</strong> Representing a 3D scene as a continuous volumetric density and color field.
+                    <ul>
+                        <li>NeRFs simulate how light travels through space. This allows for photorealistic rendering with complex transparency.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="image-placeholder" style="flex-direction: column; gap: 20px; height: auto; border: none; background: transparent; display: flex;">
+                <div style="width: 100%; text-align: center; background: #f0f0f0; padding: 10px; border: 1px dashed #ccc; box-sizing: border-box;">
+                    <img src="images/SDF.png" alt="SDF Representation" style="max-height: 360px; max-width: 100%; height: auto; margin: 0 auto; display: block;">
+                    <p style="margin: 10px 0 0; font-size: 0.9rem; color: #666;">SDF Surface: Constant distance prediction for smooth boundaries.</p>
+                </div>
+                <div style="width: 100%; text-align: center; background: #f0f0f0; padding: 10px; border: 1px dashed #ccc; box-sizing: border-box;">
+                    <img src="images/NeRF.png" alt="NeRF Rendering" style="max-height: 360px; max-width: 100%; height: auto; margin: 0 auto; display: block;">
+                    <p style="margin: 10px 0 0; font-size: 0.9rem; color: #666;">NeRF Volume: Dense radiance field capturing complex lighting.</p>
+                </div>
+            </div>
+
+            <div class="info-block">
+                <strong>Pros & Cons of Continuous Methods:</strong>
+                <br><em>Pros:</em> These methods are <strong>resolution-independent</strong>. Because they do not rely on fixed grids, you can "zoom in" forever and see infinite detail with smooth geometry.
+                <br><em>Cons:</em> It is notoriously hard to "generate" a new MLP from scratch. To create something new, you usually require a known code or a template to guide the network.
+            </div>
+
+            <h3>Why "Direct" 3D Isn't Enough</h3>
+            <p>Despite the elegance of these representations, generating raw 3D data directly is a mounting challenge due to three major bottlenecks:</p>
+            <ul>
+                <li><strong>Dimensionality Constraint:</strong>
+                    <ul>
+                        <li><em>Cubic Scaling (O(N<sup>3</sup>)):</em> Memory and compute requirements grow exponentially with resolution.</li>
+                        <li><em>Resolution Ceiling:</em> Standard hardware cannot handle high-fidelity voxel grids (e.g., 512<sup>3</sup> or higher).</li>
+                    </ul>
+                </li>
+                <li><strong>Geometric Discontinuity:</strong>
+                    <ul>
+                        <li><em>Point Clouds:</em> Lack of connectivity makes surface reconstruction and physics simulation difficult.</li>
+                        <li><em>Meshes:</em> Non-differentiable nature makes them difficult to optimize directly with gradient-based methods.</li>
+                    </ul>
+                </li>
+                <li><strong>The Diversity Gap:</strong>
+                    <ul>
+                        <li>Training a single "direct" model across thousands of categories (Open-vocabulary) is computationally unstable.</li>
+                        <li>Direct methods often require category-specific templates (e.g., only chairs or only cars).</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p>We've reached a limit: high-resolution, diverse 3D generation requires a smarter approach—compressing 3D data into a manageable **Latent Space**. This is the next frontier of research.</p>
+        </section>
+    </main>
+</body>
+</html>
